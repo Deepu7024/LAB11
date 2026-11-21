@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Login</title><link rel="stylesheet" href="style.css"></head>
+<body>
+<div class="card">
+  <h1>Login</h1>
+  <form id="loginForm" novalidate>
+    <label for="login">Login name</label>
+    <input type="text" id="login" autocomplete="username" autofocus>
+    <label for="password">Password</label>
+    <input type="password" id="password" autocomplete="current-password">
+    <p class="error" id="msg" role="alert"></p>
+    <button type="submit">Login</button>
+  </form>
+  <p class="hint">Sample users: admin / admin123 and student / pass@123</p>
+</div>
+<script src="db.js"></script>
+<script>
+  const msg = document.getElementById("msg");
+  document.getElementById("loginForm").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    msg.textContent = "";
+    const login = document.getElementById("login").value.trim();
+    const password = document.getElementById("password").value;
+    if (!login || !password) { msg.textContent = "Enter both login name and password."; return; }
+    try {
+      if (await validateUser(login, password)) {
+        sessionStorage.setItem("user", login);
+        window.location.href = "success.html";
+      } else {
+        msg.textContent = "Login failed: invalid login name or password.";
+      }
+    } catch (err) {
+      msg.textContent = "Error: " + err.message;
+    }
+  });
+</script>
+</body></html>
